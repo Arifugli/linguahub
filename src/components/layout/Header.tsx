@@ -1,166 +1,126 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Menu, X, GraduationCap, Globe, User, Settings, LogOut } from "lucide-react";
+import { Menu, X, GraduationCap, User, Settings, LogOut, ChevronDown } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t } = useTranslation();
+  const [isOpen, setIsOpen] = useState(false);
   const { user, profile, signOut, loading } = useAuth();
   const navigate = useNavigate();
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate('/');
-  };
+  const navLinks = [
+    { label: t('nav.findTutor'), href: '/tutors' },
+    { label: t('nav.howItWorks'), href: '/#how-it-works' },
+    { label: t('nav.becomeTutor'), href: '/auth?role=tutor' },
+  ];
+
+  const handleSignOut = async () => { await signOut(); navigate('/'); };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 glass">
+    <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10">
       <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl gradient-primary">
-              <GraduationCap className="h-6 w-6 text-primary-foreground" />
+        <div className="flex h-16 items-center justify-between gap-6">
+          <Link to="/" className="flex items-center gap-2.5 shrink-0">
+            <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center">
+              <GraduationCap className="h-5 w-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-foreground">
+            <span className="text-lg font-bold tracking-tight">
               Lingua<span className="text-gradient">Hub</span>
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
-            <Link to="/tutors" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Найти репетитора
-            </Link>
-            <Link to="/schools" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Языковые школы
-            </Link>
-            <Link to="/how-it-works" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Как это работает
-            </Link>
-            <Link to="/become-tutor" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Стать репетитором
-            </Link>
+          <nav className="hidden md:flex items-center gap-1 flex-1 justify-center">
+            {navLinks.map(link => (
+              <Link key={link.href} to={link.href}
+                className="px-3.5 py-2 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-all">
+                {link.label}
+              </Link>
+            ))}
           </nav>
 
-          {/* Actions */}
-          <div className="hidden md:flex items-center gap-3">
-            <Button variant="ghost" size="sm" className="gap-2">
-              <Globe className="h-4 w-4" />
-              RU
-            </Button>
-            
+          <div className="hidden md:flex items-center gap-2 shrink-0">
+            <LanguageSwitcher />
             {loading ? (
-              <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+              <div className="h-7 w-7 animate-spin rounded-full border-2 border-primary border-t-transparent" />
             ) : user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-                    <Avatar className="h-9 w-9">
+                  <Button variant="ghost" className="h-9 w-9 rounded-xl p-0">
+                    <Avatar className="h-8 w-8 rounded-xl">
                       <AvatarImage src={profile?.avatar_url || undefined} />
-                      <AvatarFallback className="bg-primary/10 text-primary">
+                      <AvatarFallback className="rounded-xl gradient-primary text-white text-xs font-bold">
                         {profile?.first_name?.[0] || user.email?.[0]?.toUpperCase() || 'U'}
                       </AvatarFallback>
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel>
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium">
-                        {profile?.first_name} {profile?.last_name}
-                      </p>
-                      <p className="text-xs text-muted-foreground">{user.email}</p>
-                    </div>
+                <DropdownMenuContent align="end" className="w-52 rounded-2xl p-1.5">
+                  <DropdownMenuLabel className="px-2 py-2">
+                    <div className="font-semibold text-sm">{profile?.first_name} {profile?.last_name}</div>
+                    <div className="text-xs text-muted-foreground">{user.email}</div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link to="/dashboard" className="cursor-pointer">
-                      <User className="mr-2 h-4 w-4" />
-                      Личный кабинет
-                    </Link>
+                  <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
+                    <Link to="/dashboard"><User className="mr-2 h-4 w-4" />{t('dashboard.overview')}</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/settings" className="cursor-pointer">
-                      <Settings className="mr-2 h-4 w-4" />
-                      Настройки
-                    </Link>
+                  <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
+                    <Link to="/profile"><Settings className="mr-2 h-4 w-4" />{t('dashboard.profile')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Выйти
+                  <DropdownMenuItem onClick={handleSignOut} className="rounded-xl cursor-pointer text-destructive focus:text-destructive">
+                    <LogOut className="mr-2 h-4 w-4" />{t('dashboard.logout')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <>
-                <Button variant="ghost" size="sm" asChild>
-                  <Link to="/auth">Войти</Link>
+                <Button variant="ghost" size="sm" className="rounded-xl font-medium" asChild>
+                  <Link to="/auth">{t('nav.login')}</Link>
                 </Button>
-                <Button variant="hero" size="sm" asChild>
-                  <Link to="/auth">Начать обучение</Link>
+                <Button size="sm" className="gradient-accent text-white border-0 rounded-xl font-semibold hover:opacity-90" asChild>
+                  <Link to="/auth">{t('nav.signup')}</Link>
                 </Button>
               </>
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? (
-              <X className="h-6 w-6 text-foreground" />
-            ) : (
-              <Menu className="h-6 w-6 text-foreground" />
-            )}
+          <button className="md:hidden p-2 rounded-xl hover:bg-muted" onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
 
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
+        {isOpen && (
           <nav className="md:hidden py-4 border-t border-border animate-slide-up">
-            <div className="flex flex-col gap-4">
-              <Link to="/tutors" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Найти репетитора
-              </Link>
-              <Link to="/schools" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Языковые школы
-              </Link>
-              <Link to="/how-it-works" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Как это работает
-              </Link>
-              <Link to="/become-tutor" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Стать репетитором
-              </Link>
-              <div className="flex flex-col gap-2 pt-4 border-t border-border">
+            <div className="flex flex-col gap-1">
+              {navLinks.map(link => (
+                <Link key={link.href} to={link.href}
+                  className="px-3 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                  onClick={() => setIsOpen(false)}>
+                  {link.label}
+                </Link>
+              ))}
+              <div className="flex gap-2 mt-3 pt-3 border-t border-border">
+                <LanguageSwitcher />
                 {user ? (
-                  <>
-                    <Button variant="ghost" size="sm" asChild>
-                      <Link to="/dashboard">Личный кабинет</Link>
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={handleSignOut}>
-                      Выйти
-                    </Button>
-                  </>
+                  <Button variant="ghost" size="sm" className="flex-1 rounded-xl text-destructive" onClick={handleSignOut}>
+                    {t('dashboard.logout')}
+                  </Button>
                 ) : (
                   <>
-                    <Button variant="ghost" size="sm" asChild>
-                      <Link to="/auth">Войти</Link>
+                    <Button variant="outline" size="sm" className="flex-1 rounded-xl" asChild>
+                      <Link to="/auth">{t('nav.login')}</Link>
                     </Button>
-                    <Button variant="hero" size="sm" asChild>
-                      <Link to="/auth">Начать обучение</Link>
+                    <Button size="sm" className="flex-1 gradient-accent text-white border-0 rounded-xl font-semibold" asChild>
+                      <Link to="/auth">{t('nav.signup')}</Link>
                     </Button>
                   </>
                 )}

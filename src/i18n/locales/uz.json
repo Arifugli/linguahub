@@ -1,0 +1,54 @@
+{
+  "nav": {
+    "findTutor": "O'qituvchi topish",
+    "schools": "Til maktablari",
+    "howItWorks": "Qanday ishlaydi",
+    "becomeTutor": "O'qituvchi bo'lish",
+    "login": "Kirish",
+    "signup": "Boshlash"
+  },
+  "hero": {
+    "badge": "Til o'rganish uchun №1 platforma",
+    "title": "Yangi tilda ishonch bilan gapiring",
+    "subtitle": "150 mamlakatdan 10 000+ o'qituvchi. Birinchi dars 50% chegirma.",
+    "searchPlaceholder": "Qaysi tilni o'rganmoqchisiz?",
+    "find": "Topish",
+    "trial": "Sinov darsi",
+    "watch": "Qanday ishlaydi"
+  },
+  "dashboard": {
+    "welcome": "Xush kelibsiz",
+    "overview": "Umumiy ko'rinish",
+    "myLessons": "Mening darslarim",
+    "homework": "Uy vazifalari",
+    "materials": "Materiallar",
+    "findTutor": "O'qituvchi topish",
+    "schedule": "Jadval",
+    "students": "O'quvchilar",
+    "earnings": "Daromad",
+    "profile": "Profil",
+    "settings": "Sozlamalar",
+    "logout": "Chiqish",
+    "startLesson": "Darsni boshlash"
+  },
+  "auth": {
+    "login": "Kirish",
+    "register": "Ro'yxatdan o'tish",
+    "email": "Email",
+    "password": "Parol",
+    "firstName": "Ism",
+    "lastName": "Familiya",
+    "loginButton": "Kirish",
+    "registerButton": "Hisob yaratish",
+    "googleLogin": "Google orqali kirish"
+  },
+  "common": {
+    "loading": "Yuklanmoqda...",
+    "save": "Saqlash",
+    "cancel": "Bekor qilish",
+    "search": "Qidirish",
+    "all": "Barchasi",
+    "online": "Online",
+    "perLesson": "/ dars"
+  }
+}

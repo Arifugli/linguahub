@@ -10,9 +10,15 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Classroom from "./pages/Classroom";
 import Schedule from "./pages/Schedule";
+import Marketplace from "./pages/Marketplace";
+import TutorProfile from "./pages/TutorProfile";
+import StudentProfile from "./pages/StudentProfile";
+import Homework from "./pages/Homework";
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { staleTime: 1000 * 60 * 5 } },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -24,31 +30,13 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
-            <Route 
-              path="/dashboard" 
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/schedule" 
-              element={
-                <ProtectedRoute allowedRoles={['tutor']}>
-                  <Schedule />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/classroom/:lessonId" 
-              element={
-                <ProtectedRoute>
-                  <Classroom />
-                </ProtectedRoute>
-              } 
-            />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="/tutors" element={<Marketplace />} />
+            <Route path="/tutors/:id" element={<TutorProfile />} />
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/schedule" element={<ProtectedRoute allowedRoles={['tutor']}><Schedule /></ProtectedRoute>} />
+            <Route path="/classroom/:lessonId" element={<ProtectedRoute><Classroom /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><StudentProfile /></ProtectedRoute>} />
+            <Route path="/homework" element={<ProtectedRoute><Homework /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
